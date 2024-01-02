@@ -17,8 +17,8 @@ library(bbplot)
            sheet = "KOBIS_2004_2023", skip = 3) -> kobis1_1csv)
   ## xls 파일 error -> "파일 > Google Sheet 로 저장" 
 
-kobis1_1csv
-kobis1_1csv |> colnames()
+#kobis1_1csv
+#kobis1_1csv |> colnames()
 #kobis1_1csv |> view()
 
 ## 1-2 사본 만들기
@@ -39,9 +39,8 @@ kobis1_2사본 |>
 #kobis1_2사본 |> slice(-1) |> view()
 kobis1_2사본 |> slice(-1) -> kobis1_3rename
 
-#
-kobis1_3rename |> view()
-kobis1_3rename |> glimpse()
+#kobis1_3rename |> view()
+#kobis1_3rename |> glimpse()
 
   ## factor ----
 kobis1_3rename$연도 |> as.integer() -> kobis1_3rename$연도
@@ -52,18 +51,70 @@ kobis1_3rename$전체_관객수 |>
 
 #
 kobis1_3rename |> 
-  drop_na(연도) |> 
+  drop_na(연도) -> kobis1_4drop_na연도
+
+kobis1_4drop_na연도 |> 
   ggplot(aes(x = factor(연도), 
-             y = 전체_관객수/1000000)) +
-  geom_bar(stat = "identity") +
-  bbc_style() +
-  #scale_fill_manual(values = )
+             y = 전체_관객수/100000000)) +
+  geom_bar(stat = "identity", 
+          fill = ifelse(kobis1_4drop_na연도$연도 %in% 
+                         c("2005", "2023"), "#E53458", "#474747")) +
   geom_hline(yintercept = 
-               kobis1_3rename$전체_관객수[20]/1000000) +
+               kobis1_3rename$전체_관객수[20]/100000000,
+             linetype = 2, size = 2, color = "#04967F") +
+  bbc_style() +
+  geom_label(aes(label = round(전체_관객수/100000000,2)), 
+             size = 7) +
+  #scale_fill_manual(values = )
   geom_hline(yintercept = 0, size = 1.5) +
-  ggtitle("국내 극장관객수 추이(단위 100만명)", 
-          "COVID-19 이후 다시 성장하는 영화산업") +
-  theme(axis.text.x = element_text(hjust = 1, angle = 45))
+  ggtitle("국내 극장관객수 추이 (단위 1억 명)", 
+          "2.27억명을 향해 다시 도약하는 영화산업") +
+  theme(axis.text.x = element_text(hjust = .9, angle = 45,
+                                   size = 22))
+
+
+kobis1_4drop_na연도 |> 
+  filter(연도 == "2019") |> gt()
+
+
+# color ====
+#"#04967F"
+#장소
+c("고양" = "#E5E9F0",
+  "국립극장" = "#DB6774",
+  "노들섬" = "#d8d8d8",
+  "부산" = "#4F93B8",
+  "서교" = "#AF967D",
+  "서울역" = "#D6BBCF",
+  "성수" = "#E1AF64",
+  "여의도" = "#C0D8D8",
+  "을지" = "#A8A8A8",
+  "의성" = "#5E81AC", 
+  "인사" = "#A3BE8C",
+  '파아프' = "#90A8C0",
+  "혜화"  = "#F0D8C0") -> mrcplace
+
+# True & False
+c("1" = "#5E81AC", 
+  "0" = "#BF616A") -> mrclogic
+
+# 시장
+c("작은시장" = "#A8A890",
+  "농부시장" = "#D08770",
+  "미식주간마켓" = "#B48EAD",
+  "쉐어마켓" = "#C0D8D8",
+  "작은시장" = "#EBCB8B",  
+  "작은커피장" = "#90A8C0",
+  "채소시장" = "#A3BE8C") -> mrcmarket
+
+#팀
+c("농부팀" = "#46C42F", #94D664 
+  "요리팀" = "#E53458", ##E53434
+  "협업팀" = "#349EE5",
+  "수공예팀" = "#BF7830",
+  "이벤트팀" = "#7947F7" #F7A449
+) -> mrcteam
+
 
 
   #1-2-1 mutate
