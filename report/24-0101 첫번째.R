@@ -62,8 +62,8 @@ kobis1_3rename |>
                kobis1_3rename$전체_관객수[20]/1000000) +
   geom_hline(yintercept = 0, size = 1.5) +
   ggtitle("국내 극장관객수 추이(단위 100만명)", 
-          "코로나 이후 다시 성장하는 영화산업") +
-  theme(axis.text.x = element_text(angle = 45))
+          "COVID-19 이후 다시 성장하는 영화산업") +
+  theme(axis.text.x = element_text(hjust = 1, angle = 45))
 
 
   #1-2-1 mutate
