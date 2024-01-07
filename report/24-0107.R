@@ -88,6 +88,7 @@ kobis_y2023 |>
                 y = 60), size = 5, color = "white") +
   coord_flip() +
   bbc_style() +
+  #facet_grid(대표국적~., scales = "free") +
   scale_fill_manual(values = kobis_country) +
   scale_y_continuous(labels = comma, limits = c(0,1300), 
                      breaks = c(300,600,900,1200)) +
@@ -96,6 +97,34 @@ kobis_y2023 |>
   theme(panel.grid.major.x = element_line(color = "grey"),
         panel.grid.major.y = element_blank(), 
         axis.text.x = element_text(size = 28))
+
+# test 3-1
+kobis_y2023 |> 
+  filter(순위 %in% c(1:20)) |> 
+  ggplot(aes(x = 영화명 |> fct_reorder(관객수), 
+             y = 매출액/100000000)) +
+  geom_bar(stat = "identity",
+           aes(fill = 대표국적),
+           show.legend = F) +
+  geom_label(aes(label = paste(round(매출액/100000000,0),
+                               "억")), 
+             size = 8, 
+             position = position_stack()) +
+  geom_text(aes(label = paste(round(관객수/10000,0),"만명"), 
+                y = 60), size = 5, color = "white") +
+  coord_flip() +
+  bbc_style() +
+  facet_grid(대표국적~., scales = "free") +
+  scale_fill_manual(values = kobis_country) +
+  scale_y_continuous(labels = comma, limits = c(0,1300), 
+                     breaks = c(300,600,900,1200)) +
+  ggtitle("2023년 1~12월 박스오피스 Top 20", 
+          "극장관객수, 누적매출액") +
+  theme(panel.grid.major.x = element_line(color = "grey"),
+        panel.grid.major.y = element_blank(), 
+        axis.text.x = element_text(size = 28), 
+        strip.text.y = element_text(angle = 0, hjust = .5),
+        strip.background.y = element_rect(fill = "grey"))
 
 # test 4 ----
 kobis_y2023 |> 
