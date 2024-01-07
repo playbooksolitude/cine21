@@ -124,11 +124,14 @@ kobis_y2023 |>
   group_by(대표국적) |> 
   reframe(매출액기여 = sum(매출액)) |> 
   mutate(
-    비율 = round(prop.table(매출액기여),3)) |> 
+    비율 = round(prop.table(매출액기여),4)*100) |> 
   arrange(desc(매출액기여)) |> 
-  gt()
+  mutate(순위 = row_number(desc(매출액기여)),
+         비율 = paste0(비율, "%")) |> 
+  filter(순위 < 21)
 
 
+#
 
 
 
