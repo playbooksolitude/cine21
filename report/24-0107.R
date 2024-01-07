@@ -8,7 +8,8 @@ p_load("tidyverse", "googlesheets4", "bbplot",
 
 
 #
-kobis_y2023$대표국적 |> fct_relevel(
+kobis_y2023$대표국적 |> 
+  fct_relevel(
   c("한국", "미국", "일본")) -> kobis_y2023$대표국적
 
 
@@ -108,11 +109,24 @@ kobis_y2023 |>
   gt()
 
 
+# 전체 영화 누적매출
+kobis_y2023 |> 
+  filter(관객수 > 100) |> 
+  group_by(대표국적) |> 
+  mutate(cum_sum = cumsum(매출액_점유율)*100) |> 
+  filter(대표국적 %in% c("한국", "미국", "일본"), 
+         관객수 > 10000) |> 
+  reframe(대표국적, 영화명, cum_sum) 
 
 
-
-
-
+#
+kobis_y2023 |> 
+  group_by(대표국적) |> 
+  reframe(매출액기여 = sum(매출액)) |> 
+  mutate(
+    비율 = round(prop.table(매출액기여),3)) |> 
+  arrange(desc(매출액기여)) |> 
+  gt()
 
 
 
