@@ -2,14 +2,10 @@
 #rm(list = ls())
 
 #
-library(googlesheets4)
-library(tidyverse)
-library(showtext)
-showtext_auto()
-library(gt)
-library(scales)
-library(bbplot)
-
+library(pacman)
+p_load("tidyverse", "googlesheets4", "bbplot", "scales",
+       "gt", "showtext", "nord", "wesanderson",
+       "ggrepel"); showtext_auto()
 
 # 1 read_sheet----
 ## 1-1 sheet
@@ -23,7 +19,6 @@ library(bbplot)
 
 ## 1-2 사본 만들기
 kobis1_1csv -> kobis1_2사본
-kobis1_2사본
 
 ## 1-3 rename
 kobis1_2사본 |> 
@@ -36,29 +31,26 @@ kobis1_2사본 |>
                   "전체_개봉편수", "전체_상영편수", 
                   "전체_매출액", "전체_관객수")
 
-#kobis1_2사본 |> slice(-1) |> view()
-kobis1_2사본 |> slice(-1) -> kobis1_3rename
-
-#kobis1_3rename |> view()
-#kobis1_3rename |> glimpse()
+(kobis1_2사본 |> slice(-1) -> kobis1_3rename)
 
   ## factor ----
-kobis1_3rename$연도 |> as.integer() -> kobis1_3rename$연도
-kobis1_3rename$한국_매출액 |> 
-  as.numeric() -> kobis1_3rename$한국_매출액
-kobis1_3rename$전체_관객수 |> 
-  as.integer() -> kobis1_3rename$전체_관객수
+(kobis1_3rename$연도 |> as.integer() -> kobis1_3rename$연도)
+(kobis1_3rename$한국_매출액 |> 
+  as.numeric() -> kobis1_3rename$한국_매출액)
+(kobis1_3rename$전체_관객수 |> 
+  as.integer() -> kobis1_3rename$전체_관객수)
 
 #
-kobis1_3rename |> 
-  drop_na(연도) -> kobis1_4drop_na연도
+(kobis1_3rename |> 
+  drop_na(연도) -> kobis1_4drop_na연도)
 
 kobis1_4drop_na연도 |> 
   ggplot(aes(x = factor(연도), 
              y = 전체_관객수/100000000)) +
   geom_bar(stat = "identity", 
           fill = ifelse(kobis1_4drop_na연도$연도 %in% 
-                         c("2005", "2023"), "#E53458", "#474747")) +
+                         c("2005", "2023"), 
+                        "#E53458", "#474747")) +
   geom_hline(yintercept = 
                kobis1_3rename$전체_관객수[20]/100000000,
              linetype = 2, size = 2, color = "#04967F") +
@@ -71,7 +63,6 @@ kobis1_4drop_na연도 |>
           "2.27억명을 향해 다시 도약하는 영화산업") +
   theme(axis.text.x = element_text(hjust = .9, angle = 45,
                                    size = 22))
-
 
 kobis1_4drop_na연도 |> 
   filter(연도 == "2019") |> gt()
@@ -108,13 +99,18 @@ c("작은시장" = "#A8A890",
   "채소시장" = "#A3BE8C") -> mrcmarket
 
 #팀
-c("농부팀" = "#46C42F", #94D664 
-  "요리팀" = "#E53458", ##E53434
-  "협업팀" = "#349EE5",
+c("미국" = "#46C42F", #94D664 
+  "일본" = "#E53458", ##E53434
+  "한국" = "#349EE5",
   "수공예팀" = "#BF7830",
   "이벤트팀" = "#7947F7" #F7A449
 ) -> mrcteam
 
+
+c("미국" = "#2AA638", #94D664 
+  "일본" = "#E53458", ##E53434
+  "한국" = "#0047A0") -> kobis_country
+  
 
 
   #1-2-1 mutate
