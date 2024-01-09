@@ -8,11 +8,16 @@ p_load("tidyverse", "googlesheets4", "bbplot",
 
 
 #
+(read_csv("./csv/yearly/kobis_y2023.csv") -> kobis_y2023)
+
+#
 kobis_y2023$대표국적 |> 
   fct_relevel(
   c("한국", "미국", "일본")) -> kobis_y2023$대표국적
 
-
+c("미국" = "#2AA638", #94D664 
+  "일본" = "#E53458", ##E53434
+  "한국" = "#0047A0") -> kobis_country
 
 
 ## 1-1 2023 top 20 그래프 ----
