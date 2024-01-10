@@ -98,7 +98,7 @@ kobis_y2023 |>
         panel.grid.major.y = element_blank(), 
         axis.text.x = element_text(size = 28))
 
-# test 3-1
+# test 3-1 면분할 ----
 kobis_y2023 |> 
   filter(순위 %in% c(1:20)) |> 
   ggplot(aes(x = 영화명 |> fct_reorder(관객수), 
@@ -123,8 +123,10 @@ kobis_y2023 |>
   theme(panel.grid.major.x = element_line(color = "grey"),
         panel.grid.major.y = element_blank(), 
         axis.text.x = element_text(size = 28), 
+        axis.text.y = element_text(size = 24),
         strip.text.y = element_text(angle = 0, hjust = .5),
         strip.background.y = element_rect(fill = "grey"))
+
 
 # test 4 ----
 kobis_y2023 |> 
@@ -160,17 +162,58 @@ kobis_y2023 |>
   filter(순위 < 21)
 
 
+# 
+sum(kobis_y2023$매출액) |> comma() #"1,261,410,142,644" #1.2
+
+#상위 2편 #842,615,057,662
+sum(kobis_y2023 |> filter(순위 < 3) |> 
+      group_by(연도) |> 
+      reframe(sum = sum(매출액))) |> comma() #"220,038,476,204"
+
+
+#상위 20편 #842,615,057,662
+sum(kobis_y2023 |> filter(순위 < 21) |> 
+  group_by(연도) |> 
+  reframe(sum = sum(매출액))) |> comma() #842,615,057,662
+
+#상위 30편 #950,353,854,514
+sum(kobis_y2023 |> filter(순위 < 31) |> 
+      group_by(연도) |> 
+      reframe(sum = sum(매출액))) 
+
+#상위 50편 #"1,075,793,595,448" 
+sum(kobis_y2023 |> filter(순위 < 51) |> 
+      group_by(연도) |> 
+      reframe(sum = sum(매출액))) |> comma() 
+
+#상위 100편 #"1,187,896,246,952" 
+sum(kobis_y2023 |> filter(순위 < 101) |> 
+      group_by(연도) |> 
+      reframe(sum = sum(매출액))) |> comma() 
+
+tibble(
+  랭크 = c("top20", "top30", "top50", "top100"),
+  매출 = c(842615057662,950353854514,1075793595448,1187896246952),
+  전체매출 = c(1261410142644),
+  비율 = paste0(round(매출/전체매출*100,1),"%"))
+
+# data check ----
+#round(220038476204/1261410142644,3) #17.4%
+#0.091+0.083
+
+kobis_y2023 |> print(n = 20)
+
+# 2023년 1000명 이상 영화
+kobis_y2023 |> 
+  filter(관객수 > 1000) |> slice(600:611) |> gt()
+
+kobis_y2023 |> 
+  filter(관객수 > 100) |> tail() |>  gt()
+
 #
+kobis_y2023 |> slice(2000:2010)
 
-
-
-
-
-
-
-
-
-
+3000-(1761+726)
 
 
 
