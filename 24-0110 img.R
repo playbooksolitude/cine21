@@ -12,7 +12,7 @@ library(showtext); showtext_auto()
                                      package="ggimg"), 
                          img)) -> posters) 
 
-
+#
 #
 ggplot(posters) +
   geom_rect_img(aes(
